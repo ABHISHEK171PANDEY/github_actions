@@ -1,0 +1,43 @@
+name: Build and Test Spring Boot Application
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch (adjust as needed)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Using an Ubuntu runner for the build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adoptopenjdk'  # You can change this to another JDK distribution if needed
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Build with Maven
+      run: mvn clean install --no-transfer-progress -DskipTests=true
+
+    - name: Run tests
+      run: mvn test --no-transfer-progress
+
+    - name: Build Spring Boot jar
+      run: mvn package -DskipTests=true
+
+    - name: Upload artifact (optional)
+      uses: actions/upload-artifact@v3
+      with:
+        name: spring-boot-app
+        path: target/*.jar  # This uploads the built JAR file
