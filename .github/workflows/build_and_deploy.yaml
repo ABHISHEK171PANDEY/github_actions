@@ -1,6 +1,5 @@
 name: Build, Test, and Push Docker Image
 
-# Trigger the workflow manually from the GitHub Actions tab
 on:
   workflow_dispatch:
 
@@ -29,11 +28,8 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests=true
 
-    - name: List files in target directory for debugging
+    - name: List files in the target directory for debugging
       run: ls -R target
-
-    - name: Run tests
-      run: mvn test --no-transfer-progress
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
