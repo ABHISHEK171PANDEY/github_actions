@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest  # Using an Ubuntu runner for the build
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -29,7 +29,7 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests=true
 
-    - name: List target directory for debugging
+    - name: List files in target directory for debugging
       run: ls -R target
 
     - name: Run tests
@@ -41,8 +41,8 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest .
+    - name: Build Docker image without cache
+      run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest .
 
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
