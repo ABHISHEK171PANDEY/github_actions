@@ -1,12 +1,8 @@
 name: Build, Test, and Push Docker Image
 
+# Trigger the workflow manually from the GitHub Actions tab
 on:
-  push:
-    branches:
-      - main  # Trigger on push to the main branch
-  pull_request:
-    branches:
-      - main  # Trigger on pull requests targeting the main branch
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -46,7 +42,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-boot:latest .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest .
 
     - name: Push Docker image to Docker Hub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/spring-boot:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
