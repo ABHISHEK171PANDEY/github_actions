@@ -1,19 +1,14 @@
-# Use the OpenJDK 17 slim image as the base image
-# This is a lightweight version of the Java Development Kit for Java 17
-FROM openjdk:17-jdk-slim
+# Use the Eclipse Temurin JDK 17 as the base image
+FROM eclipse-temurin:17-jdk-jammy
 
-# Create a temporary directory inside the container
-# This is often used by Spring Boot for storing temporary files during runtime
-VOLUME /tmp
+# Set the working directory inside the container
+WORKDIR /app
 
-# Define a build argument to specify the location of the JAR file
-# By default, it points to the target directory where Maven places the built JAR
-#ARG JAR_FILE=target/*.jar
+# Copy the built JAR file from the workflow into the container
+COPY target/spring-boot-app.jar app.jar
 
-# Copy the JAR file from the host machine into the container
-# The JAR file is renamed to 'app.jar' inside the container
-COPY target/spring-boot-app.jar app.jar 
+# Expose the default port used by the Spring Boot application
+EXPOSE 8080
 
-# Specify the command to run when the container starts
-# This runs the Spring Boot application using the 'java -jar' command
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Define the entry point to run the Spring Boot application
+ENTRYPOINT ["java", "-jar", "app.jar"]
